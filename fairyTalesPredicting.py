@@ -7,6 +7,7 @@ import random
 sentenceLength = 20
 windowLength = 2
 wordsSelectNum = 5
+autoPick = True
 source = "textLibrary/*.txt"
 filterWords = ['whichWords', 'toFilter']
 
@@ -74,14 +75,19 @@ while(inputWord != 'exit()'):
         for i in range(wordRange):
             print(inputMatch[maxI-i][0])
             wordOptions.append((inputMatch[maxI-i][0]))
-        #inputWord = input('Select new input: ')
-        inputWord = random.choice(wordOptions)
-        print('Word selected: ', inputWord)
-        if inputWord != 'exit()': # and maxWord != inputWord
-            #inputWord = maxWord
-            sentence.append(inputWord)
+        if len(wordOptions) > 0:
+            if autoPick:
+                inputWord = random.choice(wordOptions)
+            else:
+                inputWord = input('Select new input: ')
+            print('Word selected: ', inputWord)
+            if inputWord != 'exit()': # and maxWord != inputWord
+                sentence.append(inputWord)
+            else:
+                break
+            num=num+1
         else:
+            print('No matches for last word to select')
             break
-        num=num+1
-    print('Whole sentence: ', str(sentence))
+    print('Whole sentence: ', ' '.join(sentence))
 print("End of code")
