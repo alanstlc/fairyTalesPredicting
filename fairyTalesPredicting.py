@@ -6,16 +6,17 @@ import random
 ####################
 maxSentenceLength = 30
 windowLength = 2
-wordsSelectNum = 5
+wordsSelectNum = 20
 autoPick = True
 source = "textLibrary/*.txt"
+#source = "textLibrary/grimm.txt"
 filterWords = ['whichWords', 'toFilter']
-commonWords = ['a' ,'an', 'the' , 'and' , 'to', 'and' , 'of' , 'out', 'with', 'have', 'as', 'in', 'so', 'at', 'on', 'let', 'that', 'for', 'but']
-pronouns = ['she' , 'it' , 'he', 'i', 'his' , 'her' , 'my', 'we', 'you' , 'they']
+commonWords = ['a' ,'an', 'the' , 'and', 'as', 'but', 'no' , 'not', 'if', 'she', 'he', 'i', 'his' , 'my', 'we' , 'they', 'who']
+commonWordsMaybeEnd = ['to', 'of', 'it', 'so', 'with', 'at']
 prepositions = []
 
 def prepareText(text):
-    preText = text.replace(',','.').replace('?','.').replace('!','.').replace('"','.').replace(';','.').replace(':','.')#.split('.')
+    preText = text.replace(',','.').replace('?','.').replace('!','.').replace('"','.').replace(';','.').replace(':','.').replace('(','.').replace(')','.').replace('-','')#.split('.')
     return preText
 
 def parseText(text):
@@ -29,11 +30,15 @@ def createPairs(line):
     for word in input:
         if filterWords.count(word) != 0:
             input.remove(word)
+    #put frequent words together
     for i in reversed(range(len(input)-1)):
-        if commonWords.count(input[i]) == 1 or pronouns.count(input[i]) == 1:
+        #delete if last words of sentence
+        if commonWords.count(input[len(input)-1]) == 1 or commonWordsMaybeEnd.count(input[len(input)-1]) == 1:
+            input.pop(len(input)-1)
+            i = i-1
+        if commonWords.count(input[i]) == 1 or commonWordsMaybeEnd.count(input[i]) == 1:
             input[i] = input[i] + ' ' + input[i+1]
             input.pop(i+1)
-
     #print(input)
     #running these three next rows to include last pair in the sentence
     for i in range(windowLength):
